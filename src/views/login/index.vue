@@ -2,10 +2,6 @@
   <div class="container"></div>
 </template>
 
-<script type="ts" setup>
+<script type="ts" setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>
