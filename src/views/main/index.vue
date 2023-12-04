@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-11
+    111
   </div>
 </template>
 
@@ -8,4 +8,9 @@
 
 <style scoped>
 @import "@/assets/css/main.less";
+
+.container {
+  background-image: url('../assets/images/banner-bg.jpg');
+
+}
 </style>
