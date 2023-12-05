@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    111
-  </div>
+  <div class="container">111</div>
 </template>
 
 <script type="ts" setup></script>
@@ -10,7 +8,6 @@
 @import "@/assets/css/main.less";
 
 .container {
-  background-image: url('../assets/images/banner-bg.jpg');
-
+  background-image: url("../../assets/img/banner-bg.jpg");
 }
 </style>
