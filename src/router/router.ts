@@ -19,12 +19,13 @@ const router = createRouter({
       component: () => import("@/views/searchHistory/index.vue")
     },
     {
-      path: "/searchHistory",
-      component: () => import("@/views/searchHistory/index.vue")
-    },
-    {
       path: "/wordCloud",
       component: () => import("@/views/wordCloud/wordCloud.vue")
+    },
+
+    {
+      path: "/result",
+      component: () => import("@/views/searchResult/index.vue")
     }
   ]
 })
