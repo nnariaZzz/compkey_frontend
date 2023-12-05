@@ -14,7 +14,7 @@
         <div class="finder__outer">
           <div class="finder__inner">
             <div class="finder__icon" ref="icon"/>
-            <input class="finder__input" type="text" name="q" v-model="seedWord"/>
+            <input class="finder__input" type="text" name="q" v-model="seedKey"/>
           </div>
         </div>
       </div>
@@ -24,12 +24,13 @@
 
 <script type="ts" setup>
 import {onMounted, ref} from "vue";
+import {getCompkey} from '@/api/seedKey/index'
 import {
   UserFilled,
   HomeFilled
 } from "@element-plus/icons-vue"
 
-const seedWord = ref()
+const seedKey = ref()
 
 onMounted(() => {
   const input = document.querySelector(".finder__input");
@@ -46,9 +47,14 @@ onMounted(() => {
     }
   });
 
+  //搜素
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
-    console.log(seedWord.value)
+    getCompkey(seedKey.value).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
     finder.classList.add("processing");
     finder.classList.remove("active");
     input.disabled = true;
@@ -64,7 +70,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("//unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css");
 @import "@/assets/css/main.css";
 
 /*header*/
