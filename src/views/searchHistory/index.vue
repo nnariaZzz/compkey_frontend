@@ -6,8 +6,8 @@
       stripe
       :data="filterTableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
     >
-      <el-table-column label="种子关键词" prop="seedkeyname" align="center" />
-      <el-table-column label="搜索量" prop="seedkeyvolume" align="center">
+      <el-table-column label="种子关键词" prop="seedkeyname" align="center" width="auto" min-width="35%" />
+      <el-table-column label="搜索量" prop="seedkeyvolume" align="center" width="auto" min-width="35%">
         <template #default="scope">
           <el-icon><View /></el-icon>{{ " " + scope.row.seedkeyvolume }}
         </template>
@@ -21,7 +21,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center">
+      <el-table-column align="center" width="auto" min-width="35%">
         <template #header>
           <el-input v-model="search" size="small" placeholder="search" style="border-radius: 30px" />
         </template>
@@ -101,7 +101,7 @@ const disabled = ref(false)
 <style scoped>
 .container {
   position: absolute;
-  border: 1px solid #2d2828;
+  /* border: 1px solid #2d2828; */
   border-radius: 30px;
   width: 80%;
   height: 70%;

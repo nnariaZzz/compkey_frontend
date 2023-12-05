@@ -8,7 +8,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/searchHistory"
+      redirect: "/main"
     },
     {
       path: "/main",
@@ -17,6 +17,14 @@ const router = createRouter({
     {
       path: "/searchHistory",
       component: () => import("@/views/searchHistory/index.vue")
+    },
+    {
+      path: "/searchHistory",
+      component: () => import("@/views/searchHistory/index.vue")
+    },
+    {
+      path: "/wordCloud",
+      component: () => import("@/views/wordCloud/wordCloud.vue")
     }
   ]
 })
