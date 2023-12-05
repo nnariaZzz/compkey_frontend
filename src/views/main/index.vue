@@ -5,31 +5,36 @@
       <!--      用户历史入口-->
       <el-button :icon="UserFilled" circle size="large"/>
     </div>
-    <div class="title">
-      <p style="font-size:20px;font-weight:550;">Comkey Recommendation System</p>
-      <p style="font-size:55px;font-weight:800;margin: 30px 0px;">竞争性关键词推荐系统</p>
-    </div>
-    <form autocomplete="off" action="">
-      <div class="finder">
-        <div class="finder__outer">
-          <div class="finder__inner">
-            <div class="finder__icon" ref="icon"/>
-            <input class="finder__input" type="text" name="q" v-model="seedKey"/>
+    <div class="content" style="display:flex;align-items:center;flex-direction:column;">
+      <div class="title">
+        <p style="font-size:20px;font-weight:550;">Comkey Recommendation System</p>
+        <p style="font-size:55px;font-weight:800;margin: 30px 0px;">竞争性关键词推荐系统</p>
+      </div>
+      <form autocomplete="off" action="">
+        <div class="finder">
+          <div class="finder__outer">
+            <div class="finder__inner">
+              <div class="finder__icon" ref="icon"/>
+              <input class="finder__input" type="text" name="q" v-model="seedKey"/>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
-<script type="ts" setup>
-import {onMounted, ref} from "vue";
+<script lang="ts" setup>
+import {onMounted, reactive, ref} from "vue";
 import {getCompkey} from '@/api/seedKey/index'
 import {
   UserFilled,
   HomeFilled
 } from "@element-plus/icons-vue"
+import {searchResultType} from "@/api/seedKey/index";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const seedKey = ref()
 
 onMounted(() => {
@@ -51,7 +56,7 @@ onMounted(() => {
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
     getCompkey(seedKey.value).then((res) => {
-      console.log(res)
+      router.push({path: '/result', query: {result: JSON.stringify(res)}})
     }).catch((err) => {
       console.log(err)
     })
@@ -72,14 +77,6 @@ onMounted(() => {
 <style scoped>
 @import "@/assets/css/main.css";
 
-/*header*/
-.header {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  padding: 30px;
-}
-
 :deep(.el-button.is-circle) {
   padding: 0;
 
@@ -89,24 +86,10 @@ onMounted(() => {
   font-size: 16px;
 }
 
-.container {
-  background-image: url('@/assets/img/banner-bg.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  position: relative;
-  overflow: hidden;
-  padding: 290px 0px 180px 0px;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
 .title {
   color: white;
   position: relative;
-  bottom: 70px;
+  top: 150px;
   text-align: center;
 }
 
