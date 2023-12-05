@@ -1,21 +1,20 @@
 <template>
   <div class="container">
     <div class="header">
-      <el-button type="info" :icon="HomeFilled" circle/>
-
-<!--      用户历史入口-->
-      <el-button type="info" :icon="HomeFilled" circle/>
+      <el-button :icon="HomeFilled" circle size="large"/>
+      <!--      用户历史入口-->
+      <el-button :icon="UserFilled" circle size="large"/>
     </div>
     <div class="title">
       <p style="font-size:20px;font-weight:550;">Comkey Recommendation System</p>
       <p style="font-size:55px;font-weight:800;margin: 30px 0px;">竞争性关键词推荐系统</p>
     </div>
-    <form autocomplete="off">
+    <form autocomplete="off" action="">
       <div class="finder">
         <div class="finder__outer">
           <div class="finder__inner">
             <div class="finder__icon" ref="icon"/>
-            <input class="finder__input" type="text" name="q"/>
+            <input class="finder__input" type="text" name="q" v-model="seedWord"/>
           </div>
         </div>
       </div>
@@ -24,8 +23,13 @@
 </template>
 
 <script type="ts" setup>
-import {onMounted} from "vue";
-import {HomeFilled} from '@element-plus/icons-vue'
+import {onMounted, ref} from "vue";
+import {
+  UserFilled,
+  HomeFilled
+} from "@element-plus/icons-vue"
+
+const seedWord = ref()
 
 onMounted(() => {
   const input = document.querySelector(".finder__input");
@@ -44,6 +48,7 @@ onMounted(() => {
 
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
+    console.log(seedWord.value)
     finder.classList.add("processing");
     finder.classList.remove("active");
     input.disabled = true;
@@ -62,11 +67,21 @@ onMounted(() => {
 @import url("//unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css");
 @import "@/assets/css/main.css";
 
+/*header*/
 .header {
   width: 100%;
   position: absolute;
   top: 0;
   padding: 30px;
+}
+
+:deep(.el-button.is-circle) {
+  padding: 0;
+
+}
+
+:deep(.el-icon) {
+  font-size: 16px;
 }
 
 .container {
@@ -86,9 +101,8 @@ onMounted(() => {
 .title {
   color: white;
   position: relative;
-  bottom: 130px;
+  bottom: 70px;
   text-align: center;
-  font-family: 'Montserrat', serif;
 }
 
 /*搜索框*/
