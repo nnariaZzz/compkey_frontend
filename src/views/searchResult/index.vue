@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <el-button :icon="HomeFilled" circle size="large"/>
+      <el-button :icon="HomeFilled" circle size="large" @click="back"/>
       <!--      用户历史入口-->
       <el-button :icon="UserFilled" circle size="large"/>
     </div>
@@ -9,15 +9,43 @@
     <div class="content" style="display:flex;flex-direction:row;margin-top: 60px">
       <div class="left">
         <div class="search" style="display: flex;flex-direction: row">
-          <el-input style="margin-right: 10px" v-model="seedKey"/>
-          <el-button type="message" circle :icon="Search" size="large"/>
+          <el-input style="margin-right: 10px" v-model="seedKey">
+            <template #append>
+              <el-select v-model="volume" placeholder="Select" style="width: 115px">
+                <el-option value="1" label="1k">1k</el-option>
+                <el-option value="10" label="10k">10k</el-option>
+                <el-option value="100" label="100k">100k</el-option>
+              </el-select>
+            </template>
+          </el-input>
+          <el-button type="message" circle :icon="Search" size="large" @click="getCompkey(seedKey,volume)"/>
         </div>
-        <el-card style="overflow-y: auto;margin-top: 30px;height: 550px;">
-          <el-table :data="compkeyList" style="width: 100%;">
-            <el-table-column prop="name" label="关键词" width="180"/>
-            <el-table-column prop="weights" label="权重" width="180"/>
-          </el-table>
-        </el-card>
+        <div class="resultCard">
+          <el-card style="width: 52%;margin-right: 10px;overflow-y: auto">
+            <el-table :data="midkeyList" style="height: 100%">
+              <el-table-column prop="name" label="中介关键词" width="100"/>
+              <el-table-column prop="midkeyvalue" label="权重" width="80"/>
+              <el-table-column prop="compkeys" label="竞争关键词" width="200">
+                <!--              <template v-slot="scope">-->
+                <!--                <el-table :data="scope.row.compkeys">-->
+                <!--                  <el-table-column prop=""></el-table-column>-->
+                <!--                </el-table>-->
+                <!--              </template>-->
+              </el-table-column>
+            </el-table>
+          </el-card>
+          <el-card style="width: 45%;overflow-y: auto">
+            <el-table :data="compkeyList" table-layout="auto" style="height: 100%;">
+              <el-table-column prop="name" label="关键词" width="120"/>
+              <el-table-column prop="weights" label="权重" width="120"/>
+              <el-table-column label="评分">
+                <template #default="scope">
+                  <el-rate v-model="scope.row.$index" size="small" :colors="colors"/>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </div>
       </div>
 
       <div class="right">
@@ -30,11 +58,8 @@
             <p style="color: grey">搜索量：{{ seedKeyVolumn }}</p>
           </div>
           <div class="column">
-            <div
-                style="width: 100px;height: 100px;border: 1px solid #a9a9a9;border-radius: 50%;text-align: center;margin-bottom: 10px">
-              <p style="font-size: 30px;font-weight: 800;margin-bottom: 20px;line-height: 100px">{{ seedKey }}</p>
-            </div>
-            <p style="color: grey">总搜索量：{{ seedKeyVolumn }}</p>
+            <div id="frequencyChart"></div>
+            <!--            <p style="color: grey;transform: translateY(-240%)">总搜索量：{{ seedKeyVolumn }}</p>-->
           </div>
           <div class="column">
             <div class="showData">
@@ -54,22 +79,28 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
 import {
   UserFilled,
   HomeFilled,
   Search
 } from "@element-plus/icons-vue"
 import {useRoute} from "vue-router";
+import * as echarts from 'echarts';
+import {ref} from "vue";
+import {getCompkey} from "@/api/seedKey";
+
+type EChartsOption = echarts.EChartsOption
 
 const route = useRoute()
 
 const searchResult = JSON.parse(route.query.result)
-
-const seedKey = searchResult.seed_keyword
+const volume = ref(route.query.vol)
+const seedKey = ref(searchResult.seed_keyword)
 const seedKeyVolumn = searchResult.seed_keyword_volume
 const midkeyList = []
 const compkeyList = []
+
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900']) // same as { 2: '#99A9BF', 4: { value: '#F7BA2A', excluded: true }, 5: '#FF9900' }
 
 searchResult.compkeys_final.forEach((item) => {
   compkeyList.push({
@@ -84,11 +115,43 @@ searchResult.mid_kewords.forEach((item) => {
     id: item.id,
     name: item.midkeyname,
     midkeyvalue: item.midkeyvalue,
-    compkeys: item.compkeys
+    compkeys: Object.keys(item.compkeys)
   })
 })
-console.log(compkeyList)
-console.log(searchResult)
+
+setTimeout(() => {
+
+  var chartDom = document.getElementById('frequencyChart')!;
+  var myChart = echarts.init(chartDom);
+  var option: EChartsOption;
+
+  option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    series: [
+      {
+        name: '搜索量',
+        type: 'pie',
+        radius: '50%',
+        data: [
+          {value: seedKeyVolumn, name: seedKey},
+          {value: volume * 1000, name: '总搜索量'}
+        ],
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  };
+
+  option && myChart.setOption(option);
+}, 100)
+
 </script>
 
 <style scoped>
@@ -108,8 +171,22 @@ console.log(searchResult)
 }
 
 .right {
-  width: 30%;
-  margin-left: 100px;
+  width: 38%;
+  margin-left: 30px;
+}
+
+.resultCard {
+  margin-top: 30px;
+  height: 565px;
+  display: flex;
+  flex-direction: row;
+}
+
+:deep(.el-card__body) {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .column {
@@ -132,9 +209,9 @@ console.log(searchResult)
 
 .seedKeyDetails {
   width: 100%;
-  height: 200px;
+  height: 213px;
   border-radius: 1%;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255);
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
@@ -147,5 +224,11 @@ console.log(searchResult)
   width: 100%;
   height: 400px;
   background-color: #fff;
+}
+
+#frequencyChart {
+  width: 180px;
+  height: 200px;
+  transform: translateY(-5%);
 }
 </style>

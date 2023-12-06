@@ -12,10 +12,9 @@ export interface compKeyType {
     weights:number;
 }
 
-export const getCompkey = (seedKey:String) => {
-    console.log(seedKey)
+export const getCompkey = (seedKey:String,volume:Number) => {
     return requests({
-        url: '/compkey/'+seedKey,
+        url: '/compkey/'+seedKey+"/"+volume,
         method: 'GET',
     })
 }

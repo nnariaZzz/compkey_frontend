@@ -10,7 +10,7 @@
         <p style="font-size:20px;font-weight:550;">Comkey Recommendation System</p>
         <p style="font-size:55px;font-weight:800;margin: 30px 0px;">竞争性关键词推荐系统</p>
       </div>
-      <form autocomplete="off" action="">
+      <form autocomplete="off">
         <div class="finder">
           <div class="finder__outer">
             <div class="finder__inner">
@@ -20,6 +20,21 @@
           </div>
         </div>
       </form>
+
+      <el-select placeholder="选择量级" v-model="volume" style="position:absolute;top: 56%;right: 280px">
+        <el-option value="1" label="1k">1k</el-option>
+        <el-option value="10" label="10k">10k</el-option>
+        <el-option value="100" label="100k">100k</el-option>
+      </el-select>
+    </div>
+    <div class="hot-words">
+      <ul class="categories">
+        <!--        <li><a href="#"><span class="icon"><img src="@/src/assets/img/search-icon-01.png" alt="Home"></span> Apartments</a></li>-->
+        <!--        <li><a href="#"><span class="icon"><img src="@/src/assets/img/search-icon-01.png" alt="Food"></span> Food &amp; Life</a></li>-->
+        <!--        <li><a href="#"><span class="icon"><img src="@/src/assets/img/search-icon-01.png" alt="Vehicle"></span> Cars</a></li>-->
+        <!--        <li><a href="#"><span class="icon"><img src="@/src/assets/img/search-icon-01.png" alt="Shopping"></span> Shopping</a></li>-->
+        <!--        <li><a href="#"><span class="icon"><img src="@/src/assets/img/search-icon-01.png" alt="Travel"></span> Traveling</a></li>-->
+      </ul>
     </div>
   </div>
 </template>
@@ -36,6 +51,7 @@ import {useRouter} from "vue-router";
 
 const router = useRouter()
 const seedKey = ref()
+const volume = ref()
 
 onMounted(() => {
   const input = document.querySelector(".finder__input");
@@ -55,8 +71,11 @@ onMounted(() => {
   //搜素
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
-    getCompkey(seedKey.value).then((res) => {
-      router.push({path: '/result', query: {result: JSON.stringify(res)}})
+    if (volume.value == null) {
+      volume.value = 1
+    }
+    getCompkey(seedKey.value, volume.value).then((res) => {
+      router.push({path: '/result', query: {vol: volume.value, result: JSON.stringify(res)}})
     }).catch((err) => {
       console.log(err)
     })
@@ -101,6 +120,11 @@ form {
   transform: translateY(20%);
 }
 
+:deep(.el-input__inner) {
+  width: 100px;
+  height: 35px;
+}
+
 .finder {
   border: 1px solid #fff;
   background-color: #f6f5f0;
@@ -130,6 +154,7 @@ form {
 }
 
 .finder__input {
+  width: 100%;
   height: calc(100% + 3rem);
   border: none;
   background-color: transparent;
