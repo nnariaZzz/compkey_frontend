@@ -18,12 +18,13 @@ const words_cloud = ref<Data[]>([])
 const request = axios.create({
   baseURL: "http://127.0.0.1:5000/"
 })
-const getLoginInfo = () => {
+const getLoginInfo = (id:number) => {
   return request({
     method: "GET",
-    url: "/compkeyfinal/52"
+    url: "/compkeyfinal/"+id
   })
 }
+
 onMounted(() => {
   getLoginInfo()
     .then((res) => {

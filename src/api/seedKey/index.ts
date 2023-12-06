@@ -18,3 +18,11 @@ export const getCompkey = (seedKey:String,volume:Number) => {
         method: 'GET',
     })
 }
+
+export const getLoginInfo = (id:number) => {
+    return requests({
+        method: "GET",
+        url: "/compkeyfinal/"+id
+    })
+}
+

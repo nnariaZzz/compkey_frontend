@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <el-button :icon="HomeFilled" circle size="large"/>
+        <el-button :icon="HomeFilled" circle size="large" />
       <!--      用户历史入口-->
       <el-button :icon="UserFilled" circle size="large"/>
     </div>
