@@ -15,9 +15,14 @@ const router = createRouter({
       component: () => import("@/views/main/index.vue")
     },
     {
-      path: "/login",
-      component: () => import("@/views/login/index.vue")
+      path: "/searchHistory",
+      component: () => import("@/views/searchHistory/index.vue")
     },
+    {
+      path: "/wordCloud",
+      component: () => import("@/views/wordCloud/wordCloud.vue")
+    },
+
     {
       path: "/result",
       component: () => import("@/views/searchResult/index.vue")

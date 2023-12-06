@@ -91,6 +91,10 @@ onMounted(() => {
     }, 1000);
   });
 })
+//跳转至用户搜索记录页面
+const goToUser = () => {
+  router.push("/searchHistory")
+}
 </script>
 
 <style scoped>
@@ -98,7 +102,6 @@ onMounted(() => {
 
 :deep(.el-button.is-circle) {
   padding: 0;
-
 }
 
 :deep(.el-icon) {
